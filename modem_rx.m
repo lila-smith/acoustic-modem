@@ -11,12 +11,22 @@ start_idx = find_start_of_signal(y_r,x_sync);
 % we are interested in
 y_t = y_r(start_idx+length(x_sync):end); % y_t is the signal which starts at the beginning of the transmission
 
+t = 0:(1/Fs):(length(y_t)-1)/Fs;
+c = cos(2*pi*f_c*t);
+y_c = c .* y_t';
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Put your decoder code here
-%%
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+W = 0.5*f_c/Fs;
+h_lowpass = (W/pi)*sinc(W/pi*t);
+y_l = conv(y_c, h_lowpass);
+
+% Find average highs 
+x_d = zeros([msg_length*8, 1]);
+for i=1:length(x_d)
+    average = mean(y_c((i-1)*100+1:i*100));
+    x_d(i) = average > 0;
+end
+
 
 
 % convert to a string assuming that x_d is a vector of 1s and 0s
