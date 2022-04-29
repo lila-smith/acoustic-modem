@@ -1,5 +1,5 @@
 
-load short_modem_rx.mat
+load long_modem_rx.mat
 
 % The received signal includes a bunch of samples from before the
 % transmission started so we need discard these samples that occurred before
